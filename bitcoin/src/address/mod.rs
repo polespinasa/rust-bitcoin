@@ -194,7 +194,7 @@ impl fmt::Display for AddressInner {
 pub enum KnownHrp {
     /// The main Bitcoin network.
     Mainnet,
-    /// The test networks, testnet (testnet3), testnet4, and signet.
+    /// The test networks, testnet (testnet3), testnet4, testnet5, and signet.
     Testnets,
     /// The regtest network.
     Regtest,
@@ -207,7 +207,7 @@ impl KnownHrp {
 
         match network {
             Bitcoin => Self::Mainnet,
-            Testnet | Testnet4 | Signet => Self::Testnets,
+            Testnet | Testnet4 | Testnet5 | Signet => Self::Testnets,
             Regtest => Self::Regtest,
         }
     }

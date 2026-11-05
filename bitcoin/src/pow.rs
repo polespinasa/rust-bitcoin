@@ -165,6 +165,10 @@ impl Target {
     // https://github.com/bitcoin/bitcoin/blob/8105bce5b384c72cf08b25b7c5343622754e7337/src/kernel/chainparams.cpp#L411
     pub const MAX_ATTAINABLE_REGTEST: Self = Target(U256(0x7FFF_FF00u128 << 96, 0));
 
+    /// Maximum target on testnet5 (compact encoding 0x1a0fffff).
+    // https://github.com/bitcoin/bitcoin/blob/a81e5c2d8a75c32b7a60775bdf41cc59629e495a/src/kernel/chainparams.cpp#L495
+    pub const MAX_ATTAINABLE_TESTNET5: Self = Target(U256(0x0f_ffff << 56, 0));
+
     /// The proof of work limit on signet.
     // Taken from Bitcoin Core but had lossy conversion to/from compact form.
     // https://github.com/bitcoin/bitcoin/blob/8105bce5b384c72cf08b25b7c5343622754e7337/src/kernel/chainparams.cpp#L348

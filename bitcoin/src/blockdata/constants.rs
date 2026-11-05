@@ -114,6 +114,10 @@ fn bitcoin_genesis_tx(params: &Params) -> Transaction {
 }
 
 /// Constructs and returns the genesis block.
+///
+/// # Panics
+///
+/// Panics for testnet5 until its genesis block is published.
 pub fn genesis_block(params: impl AsRef<Params>) -> Block {
     let params = params.as_ref();
     let txdata = vec![bitcoin_genesis_tx(params)];
@@ -154,6 +158,7 @@ pub fn genesis_block(params: impl AsRef<Params>) -> Block {
             },
             txdata,
         },
+        Network::Testnet5 => panic!("testnet5 genesis block is not yet published"),
         Network::Signet => Block {
             header: block::Header {
                 version: block::Version::ONE,
@@ -223,11 +228,16 @@ impl ChainHash {
     ///
     /// See [BOLT 0](https://github.com/lightning/bolts/blob/ffeece3dab1c52efdb9b53ae476539320fa44938/00-introduction.md#chain_hash)
     /// for specification.
+    ///
+    /// # Panics
+    ///
+    /// Panics for testnet5 until its genesis block is published.
     pub fn using_genesis_block(params: impl AsRef<Params>) -> Self {
         match params.as_ref().network {
             Network::Bitcoin => Self::BITCOIN,
             Network::Testnet => Self::TESTNET3,
             Network::Testnet4 => Self::TESTNET4,
+            Network::Testnet5 => panic!("testnet5 genesis block is not yet published"),
             Network::Signet => Self::SIGNET,
             Network::Regtest => Self::REGTEST,
         }
@@ -237,11 +247,16 @@ impl ChainHash {
     ///
     /// See [BOLT 0](https://github.com/lightning/bolts/blob/ffeece3dab1c52efdb9b53ae476539320fa44938/00-introduction.md#chain_hash)
     /// for specification.
+    ///
+    /// # Panics
+    ///
+    /// Panics for testnet5 until its genesis block is published.
     pub const fn using_genesis_block_const(network: Network) -> Self {
         match network {
             Network::Bitcoin => Self::BITCOIN,
             Network::Testnet => Self::TESTNET3,
             Network::Testnet4 => Self::TESTNET4,
+            Network::Testnet5 => panic!("testnet5 genesis block is not yet published"),
             Network::Signet => Self::SIGNET,
             Network::Regtest => Self::REGTEST,
         }

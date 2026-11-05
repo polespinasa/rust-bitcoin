@@ -52,7 +52,7 @@ impl From<Network> for NetworkKind {
 
         match n {
             Bitcoin => NetworkKind::Main,
-            Testnet | Testnet4 | Signet | Regtest => NetworkKind::Test,
+            Testnet | Testnet4 | Testnet5 | Signet | Regtest => NetworkKind::Test,
         }
     }
 }
@@ -84,6 +84,8 @@ pub enum Network {
     Signet,
     /// Bitcoin's regtest network.
     Regtest,
+    /// Bitcoin's testnet5 network (BIP 95).
+    Testnet5,
 }
 
 impl Network {
@@ -129,6 +131,7 @@ impl Network {
             // For user-side compatibility, testnet3 is retained as test
             Network::Testnet => "test",
             Network::Testnet4 => "testnet4",
+            Network::Testnet5 => "testnet5",
             Network::Signet => "signet",
             Network::Regtest => "regtest",
         }
@@ -150,6 +153,7 @@ impl Network {
             "main" => Bitcoin,
             "test" => Testnet,
             "testnet4" => Testnet4,
+            "testnet5" => Testnet5,
             "signet" => Signet,
             "regtest" => Regtest,
             _ => return Err(ParseNetworkError(core_arg.to_owned())),
@@ -158,6 +162,10 @@ impl Network {
     }
 
     /// Return the network's chain hash (genesis block hash).
+    ///
+    /// # Panics
+    ///
+    /// Panics for testnet5 until its genesis block is published.
     ///
     /// # Examples
     ///
@@ -190,6 +198,7 @@ impl Network {
             Network::Bitcoin => &Params::BITCOIN,
             Network::Testnet => &Params::TESTNET3,
             Network::Testnet4 => &Params::TESTNET4,
+            Network::Testnet5 => &Params::TESTNET5,
             Network::Signet => &Params::SIGNET,
             Network::Regtest => &Params::REGTEST,
         }
@@ -202,6 +211,7 @@ impl Network {
             Network::Bitcoin => "bitcoin",
             Network::Testnet => "testnet",
             Network::Testnet4 => "testnet4",
+            Network::Testnet5 => "testnet5",
             Network::Signet => "signet",
             Network::Regtest => "regtest",
         }
@@ -235,7 +245,7 @@ pub mod as_core_arg {
                 Network::from_core_arg(s).map_err(|_| {
                     E::invalid_value(
                         serde::de::Unexpected::Str(s),
-                        &"bitcoin network encoded as a string (either main, test, testnet4, signet or regtest)",
+                        &"bitcoin network encoded as a string (either main, test, testnet4, testnet5, signet or regtest)",
                     )
                 })
             }
@@ -243,7 +253,7 @@ pub mod as_core_arg {
             fn expecting(&self, formatter: &mut core::fmt::Formatter) -> core::fmt::Result {
                 write!(
                     formatter,
-                    "bitcoin network encoded as a string (either main, test, testnet4, signet or regtest)"
+                    "bitcoin network encoded as a string (either main, test, testnet4, testnet5, signet or regtest)"
                 )
             }
         }
@@ -278,6 +288,7 @@ impl FromStr for Network {
             // For user-side compatibility, testnet3 is retained as testnet
             "testnet" => Ok(Network::Testnet),
             "testnet4" => Ok(Network::Testnet4),
+            "testnet5" => Ok(Network::Testnet5),
             "signet" => Ok(Network::Signet),
             "regtest" => Ok(Network::Regtest),
             _ => Err(ParseNetworkError(s.to_owned())),
